@@ -1,14 +1,24 @@
-const bg = require("../sprites/bg.png");
+import { LoaderConfig } from "./LoaderConfig";
+import { Globals } from "./Globals";
+import { GLProgram } from "pixi.js";
 
 export class Loader {
     constructor(loader) {
         this.loader = loader;
+        this.resources = LoaderConfig;
     }
 
     preload() {
-        this.loader.add("bg", bg);
-        this.loader.load((loader, resources) => {
-            console.log(resources);
+        return new Promise(resolve => {
+            for (let key in this.resources) {
+                this.loader.add(key, this.resources[key]);
+            }
+    
+            this.loader.load((loader, resources) => {
+                Globals.resources = resources;
+                console.log(Globals);
+                resolve();
+            });
         });
     }
 }
